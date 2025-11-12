@@ -6,7 +6,6 @@ import (
     "fyne.io/fyne/v2/app"
     "fyne.io/fyne/v2/container"
     "fyne.io/fyne/v2/widget"
-    "fyne.io/fyne/v2/dialog"
     "go-ssh/client/client"
     ui "go-ssh/client/ui"
 )
@@ -64,17 +63,20 @@ func main() {
     tabbar := ui.NewTabBar(nil, func(title string){ fmt.Println("[UI] 关闭标签:", title) })
     // 设置添加终端按钮逻辑（避免自引用初始化）
     tabbar.AddBtn.OnTapped = func(){
-        tabbar.AddTerminalTab("终端", ui.NewTerminalPlaceholder("终端占位，待集成"))
+        tabbar.AddTerminalTab("终端", ui.NewLocalTerminal())
     }
     tabbar.DebugPopulate()
 
-    // 主布局：顶部菜单 + 下方左右分区
+    // 主布局：顶部菜单 + 下方左右可拖动分区
+    rightPane := container.NewBorder(tabbar.HeaderBar(), nil, nil, nil, tabbar.Tabs)
+    split := container.NewHSplit(deviceInfoPanel, rightPane)
+    split.Offset = 0.25 // 初始左侧占比 25%
     mainContent := container.NewBorder(
-        header,         // 顶部
-        nil,            // 底部
-        deviceInfoPanel, // 左侧
-        nil,            // 右侧
-        container.NewBorder(tabbar.HeaderBar(), nil, nil, nil, tabbar.Tabs),   // 中间/右侧主要区域
+        header, // 顶部
+        nil,    // 底部
+        nil,    // 左侧（由 split 承载）
+        nil,    // 右侧
+        split,  // 中间区域为可拖动分割
     )
 
     fmt.Println("[INFO] 创建UI组件完成，准备显示主界面")
@@ -127,7 +129,7 @@ func createDeviceInfoPanel(api *client.APIClient) *fyne.Container {
     
     // 设置固定宽度
     scroll := container.NewScroll(content)
-    scroll.SetMinSize(fyne.NewSize(300, 0))
+    scroll.SetMinSize(fyne.NewSize(200, 0))
     
     return container.NewBorder(nil, nil, nil, nil, scroll)
 }
@@ -193,21 +195,12 @@ func showConnectDialog(window fyne.Window, api *client.APIClient) {
     )
 
     // 使用 Fyne 原生对话框，自动渲染白色面板背景与可读文本
-    d := dialog.NewCustomConfirm(
-        "新建连接",
-        "连接",
-        "取消",
-        form,
-        func(confirmed bool) {
-            if !confirmed {
-                fmt.Println("[UI] 取消连接")
-                return
-            }
-            fmt.Printf("[UI] 尝试连接: host=%s port=%s user=%s key=%s\n", hostEntry.Text, portEntry.Text, userEntry.Text, keyEntry.Text)
-            // TODO: 实现连接逻辑，调用后端 Connect 协议
-        },
-        window,
-    )
-    d.Resize(fyne.NewSize(420, 320))
-    d.Show()
+    ui.ShowConfirm(window, "新建连接", form, "连接", "取消", func(confirmed bool){
+        if !confirmed {
+            fmt.Println("[UI] 取消连接")
+            return
+        }
+        fmt.Printf("[UI] 尝试连接: host=%s port=%s user=%s key=%s\n", hostEntry.Text, portEntry.Text, userEntry.Text, keyEntry.Text)
+        // TODO: 实现连接逻辑，调用后端 Connect 协议
+    })
 }

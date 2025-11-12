@@ -4,11 +4,11 @@ package ui
 // We use Fyne's AppTabs for tabbed UI, and provide simple APIs to add/remove tabs.
 
 import (
-	"fmt"
+    "fmt"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/widget"
+    "fyne.io/fyne/v2"
+    "fyne.io/fyne/v2/container"
+    "fyne.io/fyne/v2/widget"
 )
 
 type TabBar struct {
@@ -73,6 +73,6 @@ func (t *TabBar) HeaderBar() *fyne.Container {
 
 // DebugPopulate adds a welcome tab for initial state.
 func (t *TabBar) DebugPopulate() {
-	t.AddTerminalTab("欢迎", container.NewCenter(widget.NewLabel("请新建连接以开始使用终端")))
-	fmt.Println("[UI] TabBar 初始化完成，包含默认欢迎标签")
+    t.AddTerminalTab("欢迎", container.NewCenter(widget.NewLabel("请新建连接以开始使用终端")))
+    fmt.Println("[UI] TabBar 初始化完成，包含默认欢迎标签")
 }

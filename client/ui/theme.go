@@ -45,8 +45,8 @@ func (t *LightTheme) Color(name fyne.ThemeColorName, variant fyne.ThemeVariant) 
         // Lighter overlay shadow to avoid black modal feel
         return color.NRGBA{R: 0, G: 0, B: 0, A: 24}
     case theme.ColorNameOverlayBackground:
-        // 关键：覆盖叠加层为半透明白而非黑，避免对话框黑灰底
-        return color.NRGBA{R: 255, G: 255, B: 255, A: 64}
+        // 关键：将叠加层改为不透明白色，彻底移除黑灰透明感
+        return color.NRGBA{R: 255, G: 255, B: 255, A: 255}
     // Dialog-specific colors are not exposed directly by the theme API,
     // but ensuring foreground/background above stays white/black will make
     // dialog content adhere to light style.
