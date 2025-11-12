@@ -1,0 +1,12 @@
+# go-ssh/client
+client/main.go:14:5: undefined: fmt
+client/main.go:21:5: undefined: fmt
+client/main.go:43:5: undefined: fmt
+client/main.go:46:5: undefined: fmt
+client/main.go:77:9: undefined: fmt
+client/main.go:79:13: undefined: fmt
+client/main.go:82:13: undefined: fmt
+client/main.go:87:21: undefined: fmt
+client/main.go:92:21: undefined: fmt
+client/main.go:95:21: undefined: fmt
+client/main.go:95:21: too many errors

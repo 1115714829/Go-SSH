@@ -1,0 +1,4 @@
+# 忽略 Delve/Go 调试生成的临时二进制
+__debug_bin*
+*/__debug_bin*
+client/__debug_bin*
